@@ -11,7 +11,11 @@ rm -rf $BUILDDIR
 mkdir $BUILDDIR
 cd $BUILDDIR
 
-if [ -n "${MINGW_PREFIX:-}" ] && [ -x "${MINGW_PREFIX}/bin/qt-cmake" ]; then
+if [ "${MSYSTEM:-}" = "UCRT64" ] && [ -x /ucrt64/bin/qt-cmake ]; then
+	PREFIX=/ucrt64
+elif [ "${MSYSTEM:-}" = "MINGW64" ] && [ -x /mingw64/bin/qt-cmake ]; then
+	PREFIX=/mingw64
+elif [ -n "${MINGW_PREFIX:-}" ] && [ -x "${MINGW_PREFIX}/bin/qt-cmake" ]; then
 	PREFIX="${MINGW_PREFIX}"
 else
 	PREFIX="/usr/$1-w64-mingw32"

@@ -82,7 +82,7 @@ jobs:
       - name: Build Debian package
         env:
           CMAKE_FLAGS: '-DSKIP_PLUGINS=ldap;webapi -DCMAKE_CXX_FLAGS=-Wno-deprecated-enum-enum-conversion'
-        run: .ci/linux.${{ matrix.dist }}/script.sh "$GITHUB_WORKSPACE" /tmp
+        run: .ci/linux.${{ matrix.dist }}/script.sh "$GITHUB_WORKSPACE" /tmp skip-source-tarball
       - name: Collect Debian package
         shell: bash
         run: |
