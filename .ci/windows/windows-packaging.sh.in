@@ -195,8 +195,20 @@ installer)
 		-e "s|!define LICENSE_TXT \"COPYING\"|!define LICENSE_TXT \"${ABS_INSTALL_DIR}/COPYING\"|" \
 		-e "s|File \"|File \"${ABS_INSTALL_DIR}/|g" \
 		-e "s|OutFile \"\${INSTALLER_NAME}\"|OutFile \"${ABS_INSTALL_DIR}/\${INSTALLER_NAME}\"|" \
-		${INSTALL_DIR}/veyon.nsi
-	( cd ${INSTALL_DIR} && makensis veyon.nsi )
+	${INSTALL_DIR}/veyon.nsi
+	if ! ( cd ${INSTALL_DIR} && makensis veyon.nsi ); then
+		# The makensis in this environment fails to add the first payload
+		# file under the default /SOLID lzma compression (it reports the
+		# staged welcome bitmap as "no files found" although the staging
+		# listing proves the file is present, for relative and absolute
+		# paths alike, while the identical script and assets compile
+		# fine with a stock NSIS elsewhere). Retry with zlib compression
+		# - the same swap the project's dev-nsi mode applies to this
+		# script.
+		echo "makensis failed; retrying with zlib compression" >&2
+		sed -i -e "s,/SOLID lzma,zlib,g" ${INSTALL_DIR}/veyon.nsi
+		( cd ${INSTALL_DIR} && makensis veyon.nsi )
+	fi
 	mv ${INSTALL_DIR}/vyrja-classroom-*setup.exe .
 	rm -rf ${INSTALL_DIR}
 	;;
