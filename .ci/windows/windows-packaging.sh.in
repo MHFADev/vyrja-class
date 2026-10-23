@@ -178,10 +178,24 @@ staging)
 	find ${INSTALL_DIR} -ls
 	;;
 installer)
-	# makensis resolves the installer script's relative file references
-	# (the MUI bitmaps/icons under nsis/, COPYING and every staged binary)
-	# against its own working directory, and the compiled setup.exe is
-	# expected inside the staging dir - so compile from within it
+	# The generated installer script references its payload with paths
+	# relative to the staging dir (the MUI bitmaps/icons under nsis/,
+	# COPYING and every staged binary), but the makensis in this
+	# environment does not resolve them against the script's location
+	# reliably - the welcome bitmap was reported missing although the
+	# staging listing proves it sits right next to the script. Rewrite
+	# the references to absolute staging paths before compiling, so the
+	# build no longer depends on how makensis resolves relative paths.
+	ABS_INSTALL_DIR="${CMAKE_BINARY_DIR}/${INSTALL_DIR}"
+	sed -i \
+		-e "s|nsis/welcome-page.bmp|${ABS_INSTALL_DIR}/nsis/welcome-page.bmp|g" \
+		-e "s|nsis/header.bmp|${ABS_INSTALL_DIR}/nsis/header.bmp|g" \
+		-e "s|nsis/installer.ico|${ABS_INSTALL_DIR}/nsis/installer.ico|g" \
+		-e "s|nsis/uninstaller.ico|${ABS_INSTALL_DIR}/nsis/uninstaller.ico|g" \
+		-e "s|!define LICENSE_TXT \"COPYING\"|!define LICENSE_TXT \"${ABS_INSTALL_DIR}/COPYING\"|" \
+		-e "s|File \"|File \"${ABS_INSTALL_DIR}/|g" \
+		-e "s|OutFile \"\${INSTALLER_NAME}\"|OutFile \"${ABS_INSTALL_DIR}/\${INSTALLER_NAME}\"|" \
+		${INSTALL_DIR}/veyon.nsi
 	( cd ${INSTALL_DIR} && makensis veyon.nsi )
 	mv ${INSTALL_DIR}/vyrja-classroom-*setup.exe .
 	rm -rf ${INSTALL_DIR}
