@@ -178,7 +178,11 @@ staging)
 	find ${INSTALL_DIR} -ls
 	;;
 installer)
-	makensis ${INSTALL_DIR}/veyon.nsi
+	# makensis resolves the installer script's relative file references
+	# (the MUI bitmaps/icons under nsis/, COPYING and every staged binary)
+	# against its own working directory, and the compiled setup.exe is
+	# expected inside the staging dir - so compile from within it
+	( cd ${INSTALL_DIR} && makensis veyon.nsi )
 	mv ${INSTALL_DIR}/vyrja-classroom-*setup.exe .
 	rm -rf ${INSTALL_DIR}
 	;;
