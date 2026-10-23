@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="core/resources/vyrja-logo-wide.png" alt="Vyrja Studio" width="420">
+  <img src="branding/vyrja-logo-full.png" alt="Vyrja Studio" width="420">
 </p>
 
 <h1 align="center">Vyrja Classroom</h1>
