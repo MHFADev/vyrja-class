@@ -118,7 +118,10 @@ staging)
 	cp_dll ${INSTALL_DIR} zlib1.dll
 	cp_dll ${INSTALL_DIR} libwinpthread-1.dll
 	cp_dll ${INSTALL_DIR} libstdc++-6.dll
-	cp_dll ${INSTALL_DIR} libssp-0.dll
+	# libssp-0.dll only exists in older/cross sysroots - modern MinGW
+	# (MSYS2) implements stack-protector support inside the CRT, so
+	# the built binaries do not depend on a separate SSP runtime DLL
+	cp_dll_optional ${INSTALL_DIR} libssp-0.dll
 	cp_dll ${INSTALL_DIR} ${DLL_GCC}
 	mkdir -p ${INSTALL_DIR}/crypto
 	QCA_CRYPTO=""
