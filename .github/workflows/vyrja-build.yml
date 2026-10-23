@@ -51,6 +51,8 @@ jobs:
             dos2unix
       - name: Build Windows installer
         shell: msys2 {0}
+        env:
+          CMAKE_FLAGS: '-DSKIP_PLUGINS=ldap;webapi -DWITH_TRANSLATIONS=OFF'
         run: .ci/windows/build.sh "${{ matrix.arch }}" create-windows-installer
       - name: Collect Windows installer
         shell: msys2 {0}

@@ -29,7 +29,7 @@ add_custom_target(windows-binaries
 	COMMAND mv ${WINDOWS_INSTALL_FILES}/plugins/lib*.dll ${WINDOWS_INSTALL_FILES}
 	COMMAND mv ${WINDOWS_INSTALL_FILES}/plugins/vnchooks.dll ${WINDOWS_INSTALL_FILES}
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/translations
-	COMMAND cp translations/*qm ${WINDOWS_INSTALL_FILES}/translations/
+	COMMAND sh -c "cp translations/*qm ${WINDOWS_INSTALL_FILES}/translations/ 2>/dev/null || true"
 	COMMAND cp ${DLLDIR}/libjpeg-62.dll ${WINDOWS_INSTALL_FILES}
 	COMMAND cp ${DLLDIR}/libpng16-16.dll ${WINDOWS_INSTALL_FILES}
 	COMMAND cp ${DLLDIR}/libcrypto-3*.dll ${DLLDIR}/libssl-3*.dll ${WINDOWS_INSTALL_FILES}
@@ -47,7 +47,7 @@ add_custom_target(windows-binaries
 	COMMAND cp ${DLLDIR_GCC}/${DLL_GCC} ${WINDOWS_INSTALL_FILES}
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/crypto
 	COMMAND cp ${DLLDIR_LIB}/qca-qt6/crypto/libqca-ossl.dll ${WINDOWS_INSTALL_FILES}/crypto
-	COMMAND cp ${DLLDIR}/Qt6Core.dll
+	COMMAND sh -c "cp ${DLLDIR}/Qt6Core.dll
 				${DLLDIR}/Qt6Core5Compat.dll
 				${DLLDIR}/Qt6Gui.dll
 				${DLLDIR}/Qt6Widgets.dll
@@ -55,7 +55,7 @@ add_custom_target(windows-binaries
 				${DLLDIR}/Qt6Concurrent.dll
 				${DLLDIR}/Qt6HttpServer.dll
 				${DLLDIR}/Qt6WebSockets.dll
-			${WINDOWS_INSTALL_FILES}
+			${WINDOWS_INSTALL_FILES} 2>/dev/null || true"
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/imageformats
 	COMMAND cp ${MINGW_PREFIX}/plugins/imageformats/qjpeg.dll ${WINDOWS_INSTALL_FILES}/imageformats
 	COMMAND mkdir -p ${WINDOWS_INSTALL_FILES}/platforms
