@@ -1,0 +1,741 @@
+/*
+ * Vyrja Classroom theme. Tokens (@NAME@) are replaced at runtime by VyrjaTheme.
+ *
+ * Rules of this file (see branding/DESIGN.md):
+ *  - navy is the chrome, orange is the single accent; text on orange is navy, never white
+ *  - radius scale: 8px controls and chips, 12px groups and cards
+ *  - state is never color only: online = dot, offline = ring, problem = square
+ *  - borders that define a control use @CONTROL_BORDER@ (3:1), dividers use @BORDER@
+ *  - no gradients, no shadows at rest; hover is a tone step
+ *  - rgba() alpha values are 0-255 integers
+ */
+
+QMainWindow, QDialog, QWizard {
+	background-color: @BG@;
+}
+
+QWidget {
+	color: @TEXT@;
+}
+
+QWidget:disabled {
+	color: @DISABLED@;
+}
+
+QLabel {
+	background: transparent;
+}
+
+QToolTip {
+	background-color: @PRIMARY@;
+	color: #FFFFFF;
+	padding: 6px 8px;
+	border: 0px;
+	border-radius: 6px;
+}
+
+/* ---------- toolbar & tool buttons ---------- */
+QToolBar {
+	background-color: @BG@;
+	border: 0px;
+	border-bottom: 1px solid @BORDER@;
+	padding: 4px 6px;
+	spacing: 4px;
+}
+
+QToolButton {
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: 10px;
+	padding: 4px;
+}
+
+QToolButton:hover {
+	background-color: @HOVER@;
+	border-color: @BORDER@;
+}
+
+QToolButton:pressed {
+	background-color: @ACCENT_SOFT@;
+}
+
+/* active mode: 2px stroke instead of 1px, padding gives the pixel back so nothing shifts */
+QToolButton:checked {
+	background-color: @ACCENT_SOFT@;
+	border: 2px solid @ACCENT_STRONG@;
+	padding: 3px;
+}
+
+QToolButton:focus {
+	border-color: @ACCENT_STRONG@;
+}
+
+QToolButton::menu-indicator {
+	image: none;
+}
+
+/* ---------- Vyrja header bar (master) ---------- */
+/* every rule below starts with #HeaderBar #Name so it beats "#HeaderBar QLabel" */
+#HeaderBar {
+	background: @HEADER@;
+}
+
+#HeaderBar QLabel {
+	color: #FFFFFF;
+	background: transparent;
+}
+
+#HeaderBar #HeaderLogo {
+	background: #FAF9FD;
+	border-radius: 12px;
+}
+
+#HeaderBar #HeaderTitle {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+#HeaderBar #HeaderSubtitle {
+	color: #C9C6E6;
+	font-size: 12px;
+}
+
+#HeaderBar #HeaderChip {
+	background: rgba(255, 255, 255, 31);
+	border-radius: 8px;
+	padding: 5px 12px;
+	font-weight: 600;
+}
+
+#HeaderBar #HeaderChipAccent {
+	background: @ACCENT@;
+	color: @ON_ACCENT@;
+	border-radius: 8px;
+	padding: 5px 12px;
+	font-weight: 700;
+}
+
+#HeaderBar #HeaderSearch {
+	background: rgba(255, 255, 255, 31);
+	color: #FFFFFF;
+	border: 1px solid rgba(255, 255, 255, 89);
+	border-radius: 8px;
+	padding: 6px 14px;
+	font-weight: 600;
+}
+
+#HeaderBar #HeaderSearch:hover {
+	background: rgba(255, 255, 255, 64);
+	border-color: rgba(255, 255, 255, 140);
+}
+
+#HeaderBar #HeaderSearch:focus {
+	border: 2px solid @ACCENT@;
+	padding: 5px 13px;
+}
+
+/* live counters: dot = online, ring = offline, square = problem */
+#HeaderBar #StatChip {
+	background: rgba(255, 255, 255, 31);
+	border-radius: 8px;
+}
+
+#HeaderBar #StatChip #StatValue {
+	color: #FFFFFF;
+	font-weight: 600;
+}
+
+#HeaderBar #StatChip #StatDot {
+	background: transparent;
+}
+
+#HeaderBar #StatChip #StatDot[state="online"] {
+	background: @ONLINE@;
+	border-radius: 5px;
+}
+
+#HeaderBar #StatChip #StatDot[state="offline"] {
+	background: transparent;
+	border: 2px solid @OFFLINE@;
+	border-radius: 5px;
+}
+
+#HeaderBar #StatChip #StatDot[state="problem"] {
+	background: @PROBLEM@;
+	border-radius: 2px;
+}
+
+/* ---------- ribbon groups ---------- */
+#RibbonGroup {
+	background: @SURFACE@;
+	border: 1px solid @BORDER@;
+	border-radius: 12px;
+}
+
+#RibbonCaption {
+	color: @TEXT_MUTED@;
+	font-size: 11px;
+	font-weight: 600;
+	padding-bottom: 2px;
+}
+
+#QuickClassButton {
+	background: @ACCENT@;
+	color: @ON_ACCENT@;
+	font-weight: 700;
+	border: 1px solid @ACCENT@;
+	border-radius: 10px;
+	padding: 4px 12px;
+}
+
+#QuickClassButton:hover {
+	background: #FF8366;
+	border-color: #FF8366;
+}
+
+#QuickClassButton:pressed {
+	background: @ACCENT_STRONG@;
+	border-color: @ACCENT_STRONG@;
+}
+
+#QuickClassButton:focus {
+	border: 2px solid @PRIMARY@;
+	padding: 3px 11px;
+}
+
+/* ---------- buttons ---------- */
+QPushButton {
+	background-color: @SURFACE@;
+	border: 1px solid @CONTROL_BORDER@;
+	border-radius: 8px;
+	padding: 6px 14px;
+	min-height: 18px;
+}
+
+QPushButton:hover {
+	background-color: @HOVER@;
+	border-color: @PRIMARY_HOVER@;
+}
+
+QPushButton:pressed {
+	background-color: @ACCENT_SOFT@;
+}
+
+QPushButton:default, QDialogButtonBox QPushButton:default {
+	background-color: @PRIMARY@;
+	color: @ON_PRIMARY@;
+	border-color: @PRIMARY@;
+	font-weight: 600;
+}
+
+QPushButton:default:hover {
+	background-color: @PRIMARY_HOVER@;
+}
+
+QPushButton:disabled {
+	background-color: @SURFACE_ALT@;
+	color: @DISABLED@;
+	border-color: @BORDER@;
+}
+
+/* keyboard / click focus: 2px accent stroke, padding gives the pixel back */
+QPushButton:focus {
+	border: 2px solid @ACCENT_STRONG@;
+	padding: 5px 13px;
+}
+
+/* the navy default button needs an orange ring: a navy one would vanish into the fill */
+QPushButton:default:focus, QDialogButtonBox QPushButton:default:focus {
+	border: 2px solid @ACCENT@;
+	padding: 5px 13px;
+}
+
+/* ---------- inputs ---------- */
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox, QTextEdit, QPlainTextEdit {
+	background-color: @SURFACE@;
+	border: 1px solid @CONTROL_BORDER@;
+	border-radius: 8px;
+	padding: 4px 8px;
+	selection-background-color: @ACCENT@;
+	selection-color: @ON_ACCENT@;
+}
+
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus,
+QTextEdit:focus, QPlainTextEdit:focus {
+	border: 2px solid @ACCENT_STRONG@;
+	padding: 3px 7px;
+}
+
+QComboBox QAbstractItemView {
+	background-color: @SURFACE@;
+	border: 1px solid @CONTROL_BORDER@;
+	selection-background-color: @ACCENT_SOFT@;
+	selection-color: @TEXT@;
+	outline: 0;
+}
+
+QCheckBox, QRadioButton {
+	spacing: 8px;
+	background: transparent;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+	width: 16px;
+	height: 16px;
+}
+
+QCheckBox::indicator {
+	border: 2px solid @CONTROL_BORDER@;
+	border-radius: 4px;
+	background: @SURFACE@;
+}
+
+QCheckBox::indicator:checked {
+	background: @ACCENT@;
+	border-color: @ACCENT@;
+	image: url(:/core/check-navy.png);
+}
+
+QCheckBox::indicator:focus, QRadioButton::indicator:focus {
+	border-color: @ACCENT_STRONG@;
+}
+
+QRadioButton::indicator {
+	border: 2px solid @CONTROL_BORDER@;
+	border-radius: 10px;
+	background: @SURFACE@;
+}
+
+QRadioButton::indicator:checked {
+	background: @ACCENT@;
+	border-color: @ACCENT@;
+}
+
+/* ---------- views ---------- */
+QAbstractItemView {
+	background-color: @SURFACE@;
+	alternate-background-color: @SURFACE_ALT@;
+	border: 1px solid @BORDER@;
+	border-radius: 8px;
+	selection-background-color: @ACCENT_SOFT@;
+	selection-color: @TEXT@;
+	outline: 0;
+}
+
+QAbstractItemView::item:hover {
+	background-color: @HOVER@;
+}
+
+QHeaderView::section {
+	background-color: @SURFACE_ALT@;
+	color: @TEXT@;
+	padding: 5px 8px;
+	border: 0px;
+	border-right: 1px solid @BORDER@;
+	border-bottom: 1px solid @BORDER@;
+	font-weight: 600;
+}
+
+/* ---------- tabs, groups ---------- */
+QTabWidget::pane {
+	border: 1px solid @BORDER@;
+	border-radius: 8px;
+	background: @SURFACE@;
+	top: -1px;
+}
+
+QTabBar::tab {
+	background: transparent;
+	padding: 7px 16px;
+	border: 0px;
+	border-bottom: 3px solid transparent;
+	color: @TEXT_MUTED@;
+}
+
+QTabBar::tab:hover {
+	color: @TEXT@;
+}
+
+QTabBar::tab:selected {
+	color: @TEXT@;
+	font-weight: 600;
+	border-bottom: 3px solid @ACCENT_STRONG@;
+}
+
+QGroupBox {
+	background: @SURFACE@;
+	border: 1px solid @BORDER@;
+	border-radius: 12px;
+	margin-top: 14px;
+	padding: 12px 8px 8px 8px;
+}
+
+QGroupBox::title {
+	subcontrol-origin: margin;
+	subcontrol-position: top left;
+	left: 12px;
+	padding: 0 6px;
+	color: @HEADING@;
+	font-weight: 600;
+}
+
+/* ---------- menus ---------- */
+QMenu {
+	background-color: @SURFACE@;
+	border: 1px solid @CONTROL_BORDER@;
+	border-radius: 8px;
+	padding: 4px;
+}
+
+QMenu::item {
+	padding: 7px 24px 7px 12px;
+	border-radius: 6px;
+}
+
+QMenu::item:selected {
+	background-color: @ACCENT_SOFT@;
+	color: @TEXT@;
+}
+
+QMenu::separator {
+	height: 1px;
+	background: @BORDER@;
+	margin: 4px 8px;
+}
+
+/* ---------- status bar, splitters ---------- */
+QStatusBar {
+	background-color: @SURFACE@;
+	border-top: 1px solid @BORDER@;
+}
+
+QStatusBar::item {
+	border: 0px;
+}
+
+QSplitter::handle:hover {
+	background-color: @ACCENT@;
+}
+
+/* ---------- sliders, progress, scrollbars ---------- */
+QSlider::groove:horizontal {
+	height: 4px;
+	background: @BORDER@;
+	border-radius: 2px;
+}
+
+QSlider::sub-page:horizontal {
+	background: @ACCENT@;
+	border-radius: 2px;
+}
+
+QSlider::handle:horizontal {
+	background: @PRIMARY@;
+	width: 14px;
+	height: 14px;
+	margin: -6px 0;
+	border-radius: 7px;
+}
+
+QSlider::handle:horizontal:focus {
+	border: 2px solid @ACCENT_STRONG@;
+}
+
+QProgressBar {
+	background: @SURFACE_ALT@;
+	border: 1px solid @BORDER@;
+	border-radius: 6px;
+	text-align: center;
+}
+
+QProgressBar::chunk {
+	background: @ACCENT@;
+	border-radius: 5px;
+}
+
+QScrollBar:vertical {
+	background: transparent;
+	width: 12px;
+	margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+	background: @CONTROL_BORDER@;
+	border-radius: 4px;
+	min-height: 28px;
+}
+
+QScrollBar::handle:vertical:hover {
+	background: @PRIMARY_HOVER@;
+}
+
+QScrollBar:horizontal {
+	background: transparent;
+	height: 12px;
+	margin: 2px;
+}
+
+QScrollBar::handle:horizontal {
+	background: @CONTROL_BORDER@;
+	border-radius: 4px;
+	min-width: 28px;
+}
+
+QScrollBar::handle:horizontal:hover {
+	background: @PRIMARY_HOVER@;
+}
+
+QScrollBar::add-line, QScrollBar::sub-line {
+	width: 0px;
+	height: 0px;
+}
+
+QScrollBar::add-page, QScrollBar::sub-page {
+	background: transparent;
+}
+
+/* ---------- drop-downs & spin boxes ---------- */
+QComboBox {
+	padding-right: 26px;
+}
+
+QComboBox::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: center right;
+	width: 24px;
+	border: 0px;
+}
+
+QComboBox::down-arrow {
+	image: url(:/core/go-down@ICON_SUFFIX@.png);
+	width: 12px;
+	height: 12px;
+}
+
+QSpinBox, QDoubleSpinBox {
+	padding-right: 22px;
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+	subcontrol-origin: border;
+	subcontrol-position: top right;
+	width: 20px;
+	border: 0px;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+	subcontrol-origin: border;
+	subcontrol-position: bottom right;
+	width: 20px;
+	border: 0px;
+}
+
+QSpinBox::up-arrow, QDoubleSpinBox::up-arrow {
+	image: url(:/core/go-up@ICON_SUFFIX@.png);
+	width: 9px;
+	height: 9px;
+}
+
+QSpinBox::down-arrow, QDoubleSpinBox::down-arrow {
+	image: url(:/core/go-down@ICON_SUFFIX@.png);
+	width: 9px;
+	height: 9px;
+}
+
+QScrollArea {
+	background: transparent;
+	border: 0px;
+}
+
+/* ---------- bottom bar tabs (master) ---------- */
+#panelButtons QToolButton {
+	background: @SURFACE_ALT@;
+	border: 1px solid @CONTROL_BORDER@;
+	border-radius: 8px;
+	padding: 5px 12px;
+	font-weight: 600;
+}
+
+#panelButtons QToolButton:hover {
+	background: @HOVER@;
+}
+
+#panelButtons QToolButton:checked {
+	background: @PRIMARY@;
+	color: #FFFFFF;
+	border: 1px solid @PRIMARY@;
+	padding: 5px 12px;
+}
+
+/* ---------- empty state of the computer grid (master) ---------- */
+#EmptyState {
+	background: transparent;
+}
+
+#EmptyState #EmptyTitle {
+	color: @HEADING@;
+	font-size: 22px;
+	font-weight: 700;
+}
+
+#EmptyState #EmptyBody {
+	color: @TEXT_MUTED@;
+	font-size: 14px;
+}
+
+#EmptyState #EmptyPrimary {
+	background: @ACCENT@;
+	color: @ON_ACCENT@;
+	border: 1px solid @ACCENT@;
+	font-weight: 700;
+	padding: 8px 20px;
+}
+
+#EmptyState #EmptyPrimary:hover {
+	background: #FF8366;
+	border-color: #FF8366;
+}
+
+#EmptyState #EmptyPrimary:focus {
+	border: 2px solid @PRIMARY@;
+	padding: 7px 19px;
+}
+
+#EmptyState #EmptySecondary {
+	padding: 8px 20px;
+}
+
+#EmptyState #EmptySecondary:focus {
+	padding: 7px 19px;
+}
+
+/* ---------- command palette (Ctrl+K) ---------- */
+#CommandPalette {
+	background: @BG@;
+	border: 2px solid @ACCENT_STRONG@;
+}
+
+#CommandPalette QLineEdit {
+	font-size: 15px;
+	padding: 8px 12px;
+}
+
+#CommandPalette QLineEdit:focus {
+	padding: 7px 11px;
+}
+
+#CommandPalette QListWidget {
+	border: 0px;
+	background: transparent;
+}
+
+#CommandPalette QListWidget::item {
+	padding: 7px 10px;
+	border-radius: 8px;
+}
+
+#CommandPalette QListWidget::item:selected {
+	background: @ACCENT_SOFT@;
+	color: @TEXT@;
+}
+
+#CommandPalette #CommandTarget {
+	color: @TEXT_MUTED@;
+	padding: 2px 4px;
+}
+
+/* ---------- configurator: brand block, page list, page title ---------- */
+#SideBrand {
+	background: @HEADER@;
+	border-radius: 12px;
+}
+
+#SideBrand QLabel {
+	color: #FFFFFF;
+	background: transparent;
+}
+
+#SideBrand #SideBrandLogo {
+	background: #FAF9FD;
+	border-radius: 12px;
+}
+
+#SideBrand #SideBrandTitle {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+#SideBrand #SideBrandSub {
+	color: #C9C6E6;
+	font-size: 11px;
+}
+
+#pageSelector {
+	background: transparent;
+	border: 0px;
+	outline: 0;
+}
+
+#pageSelector::item {
+	padding: 9px 10px;
+	margin: 2px 2px;
+	border-radius: 8px;
+	color: @TEXT@;
+}
+
+#pageSelector::item:hover {
+	background: @HOVER@;
+}
+
+/* selected page: filled with the accent tint and bold, no side stripe */
+#pageSelector::item:selected {
+	background: @ACCENT_SOFT@;
+	color: @TEXT@;
+	font-weight: 600;
+}
+
+#PageTitle {
+	font-size: 22px;
+	font-weight: 700;
+	color: @HEADING@;
+	padding: 2px 6px 8px 6px;
+}
+
+/* the guided setup entry point in the menu bar corner */
+#WizardButton {
+	background: @ACCENT@;
+	color: @ON_ACCENT@;
+	font-weight: 700;
+	border: 1px solid @ACCENT@;
+	border-radius: 8px;
+	padding: 4px 14px;
+	margin: 2px 6px;
+}
+
+#WizardButton:hover {
+	background: #FF8366;
+	border-color: #FF8366;
+}
+
+#WizardButton:focus {
+	border: 2px solid @PRIMARY@;
+	padding: 3px 13px;
+}
+
+/* ---------- setup wizard ---------- */
+#WizardMuted {
+	color: @TEXT_MUTED@;
+}
+
+#WizardChoice {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+#wizardError {
+	color: @ERROR@;
+	background: @ACCENT_SOFT@;
+	border: 1px solid @ACCENT_STRONG@;
+	border-radius: 8px;
+	padding: 8px 10px;
+}

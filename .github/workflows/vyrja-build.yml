@@ -1,0 +1,95 @@
+name: Vyrja Classroom build and release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  PROJECT_NAME: vyrja-classroom
+
+jobs:
+  windows:
+    name: Windows installer (.exe)
+    runs-on: ubuntu-latest
+    container: registry.gitlab.com/veyon/ci-mingw-w64:main
+    strategy:
+      matrix:
+        arch: [x86_64]
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build Windows installer
+        run: CMAKE_FLAGS="" .ci/windows/build.sh "${{ matrix.arch }}" create-windows-installer
+      - name: Collect Windows installer
+        shell: bash
+        run: |
+          mkdir -p release-assets
+          find . -maxdepth 1 -type f -iname '*.exe' -print -exec cp -v {} release-assets/ \;
+          test -n "$(find release-assets -type f -name '*.exe' -print -quit)"
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vyrja-classroom-windows-${{ matrix.arch }}
+          path: release-assets/*.exe
+          if-no-files-found: error
+
+  linux:
+    name: Linux package (.deb)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dist: [ubuntu.24.04, debian.12]
+    container: veyon/ci.linux.${{ matrix.dist }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Build Debian package
+        run: .ci/linux.${{ matrix.dist }}/script.sh "$GITHUB_WORKSPACE" /tmp
+      - name: Collect Debian package
+        shell: bash
+        run: |
+          mkdir -p release-assets
+          find . -maxdepth 1 -type f -name '*.deb' -print -exec cp -v {} release-assets/ \;
+          test -n "$(find release-assets -type f -name '*.deb' -print -quit)"
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vyrja-classroom-linux-${{ matrix.dist }}
+          path: release-assets/*.deb
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vyrja-classroom-*
+          path: release-assets
+          merge-multiple: true
+      - name: List release files
+        run: |
+          find release-assets -maxdepth 1 -type f -print -exec file {} \;
+          test -n "$(find release-assets -maxdepth 1 -type f -print -quit)"
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true
