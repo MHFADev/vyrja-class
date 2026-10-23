@@ -49,9 +49,6 @@ jobs:
             mingw-w64-ucrt-x86_64-libvncserver
             mingw-w64-ucrt-x86_64-nsis
             dos2unix
-      - name: Mark workspace as safe for Git
-        shell: msys2 {0}
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build Windows installer
         shell: msys2 {0}
         run: .ci/windows/build.sh "${{ matrix.arch }}" create-windows-installer

@@ -1,7 +1,9 @@
 #!/bin/sh
 
-(cd 3rdparty/kldap && \
-rm -rf \
-	kioworker \
-	src/core/autotests \
-	src/widgets)
+if [ -d 3rdparty/kldap ]; then
+	(cd 3rdparty/kldap && \
+	rm -rf \
+		kioworker \
+		src/core/autotests \
+		src/widgets)
+fi
