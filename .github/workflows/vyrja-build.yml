@@ -25,29 +25,29 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install MSYS2 MinGW toolchain and runtime dependencies
+      - name: Install MSYS2 UCRT64 toolchain and runtime dependencies
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
             base-devel
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-qt6-base
-            mingw-w64-x86_64-qt6-5compat
-            mingw-w64-x86_64-qt6-tools
-            mingw-w64-x86_64-qt6-translations
-            mingw-w64-x86_64-qca
-            mingw-w64-x86_64-openldap
-            mingw-w64-x86_64-cyrus-sasl
-            mingw-w64-x86_64-openssl
-            mingw-w64-x86_64-libjpeg-turbo
-            mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-lzo2
-            mingw-w64-x86_64-libvncserver
-            mingw-w64-x86_64-nsis
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-qt6-base
+            mingw-w64-ucrt-x86_64-qt6-5compat
+            mingw-w64-ucrt-x86_64-qt6-tools
+            mingw-w64-ucrt-x86_64-qt6-translations
+            mingw-w64-ucrt-x86_64-qca-qt6
+            mingw-w64-ucrt-x86_64-openldap
+            mingw-w64-ucrt-x86_64-cyrus-sasl
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-libjpeg-turbo
+            mingw-w64-ucrt-x86_64-libpng
+            mingw-w64-ucrt-x86_64-lzo2
+            mingw-w64-ucrt-x86_64-libvncserver
+            mingw-w64-ucrt-x86_64-nsis
             dos2unix
       - name: Mark workspace as safe for Git
         shell: msys2 {0}
@@ -83,6 +83,8 @@ jobs:
       - name: Mark workspace as safe for Git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build Debian package
+        env:
+          CMAKE_FLAGS: '-DSKIP_PLUGINS=ldap;webapi -DCMAKE_CXX_FLAGS=-Wno-deprecated-enum-enum-conversion'
         run: .ci/linux.${{ matrix.dist }}/script.sh "$GITHUB_WORKSPACE" /tmp
       - name: Collect Debian package
         shell: bash
