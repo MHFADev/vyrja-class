@@ -196,6 +196,19 @@ installer)
 		-e "s|File \"|File \"${ABS_INSTALL_DIR}/|g" \
 		-e "s|OutFile \"\${INSTALLER_NAME}\"|OutFile \"${ABS_INSTALL_DIR}/\${INSTALLER_NAME}\"|" \
 	${INSTALL_DIR}/veyon.nsi
+	# NSIS on Windows splits File paths at backslashes when looking up
+	# the payload files - the forward slashes used throughout the
+	# generated script (authored for the upstream Linux cross build,
+	# whose makensis accepts them) make every lookup miss on a native
+	# Windows makensis, which then reports existing files as missing.
+	# Convert the file references to backslash form.
+	sed -i \
+		-e '/File "/ s|/|\\|g' \
+		-e '/!define MUI_.*BITMAP/ s|/|\\|g' \
+		-e '/!define MUI_.*ICON/ s|/|\\|g' \
+		-e '/!define LICENSE_TXT/ s|/|\\|g' \
+		-e '/OutFile "/ s|/|\\|g' \
+		${INSTALL_DIR}/veyon.nsi
 	if ! ( cd ${INSTALL_DIR} && makensis veyon.nsi ); then
 		# The makensis in this environment fails to add the first payload
 		# file under the default /SOLID lzma compression (it reports the
