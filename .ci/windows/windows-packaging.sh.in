@@ -26,31 +26,42 @@ DLL_DDENGINE="@DLL_DDENGINE@"
 
 cd "${CMAKE_BINARY_DIR}"
 
-# cp_dll <file> <destdir> - copy a runtime DLL from the MinGW prefix. Its
-# exact location differs between the upstream cross sysroot and native
-# MSYS2 layouts (bin vs lib vs gcc lib dir), so search all of them. Fails
-# loudly when the DLL is genuinely absent.
-cp_dll() {
+# find_dll <name-or-glob> - print the path of a runtime DLL in the MinGW
+# prefix. Its exact name and location differ between the upstream cross
+# sysroot and native MSYS2 packages (e.g. libjpeg-62.dll vs libjpeg-8.dll,
+# bin vs lib vs gcc lib dir), so callers may pass alternative names/globs.
+find_dll() {
 	for dir in "${DLLDIR}" "${DLLDIR_LIB}" "${DLLDIR_GCC}"; do
-		if [ -f "${dir}/$1" ]; then
-			cp "${dir}/$1" "$2"
-			return 0
-		fi
+		for f in "${dir}"/$1; do
+			if [ -f "$f" ]; then
+				echo "$f"
+				return 0
+			fi
+		done
 	done
-	echo "error: runtime DLL $1 not found in ${DLLDIR}, ${DLLDIR_LIB} or ${DLLDIR_GCC}" >&2
 	return 1
 }
 
-# cp_dll_optional <file> <destdir> - copy a DLL only when it exists in the
-# prefix (for libraries that only some build configurations link against).
-cp_dll_optional() {
-	for dir in "${DLLDIR}" "${DLLDIR_LIB}" "${DLLDIR_GCC}"; do
-		if [ -f "${dir}/$1" ]; then
-			cp "${dir}/$1" "$2"
+# cp_dll <destdir> <name-or-glob> [alternatives...] - copy the first
+# matching runtime DLL from the prefix. Fails loudly when no candidate
+# is present at all.
+cp_dll() {
+	dest="$1"; shift
+	for name in "$@"; do
+		if f=$(find_dll "${name}"); then
+			cp "$f" "${dest}"
 			return 0
 		fi
 	done
-	return 0
+	echo "error: runtime DLL not found in MinGW prefix (tried: $*)" >&2
+	return 1
+}
+
+# cp_dll_optional <destdir> <name-or-glob> [alternatives...] - copy a DLL
+# only when it exists in the prefix (for libraries that only some build
+# configurations link against).
+cp_dll_optional() {
+	cp_dll "$@" || true
 }
 
 # qt_plugins_dir - locate the Qt6 plugins directory of the prefix (its
@@ -75,7 +86,7 @@ staging)
 	find "${CMAKE_SOURCE_DIR}/3rdparty/interception" -maxdepth 1 -type f -exec cp {} ${INSTALL_DIR}/interception/ ';'
 	cp "${CMAKE_SOURCE_DIR}/3rdparty/ddengine/${DLL_DDENGINE}" ${INSTALL_DIR}
 	cp core/veyon-core.dll ${INSTALL_DIR}
-	find . -mindepth 2 -name 'veyon-*.exe' -exec cp '{}' ${INSTALL_DIR}/ ';'
+	find . -mindepth 2 -name 'veyon-*.exe' -not -path "./${INSTALL_DIR}/*" -exec cp '{}' ${INSTALL_DIR}/ ';'
 	mkdir -p ${INSTALL_DIR}/plugins
 	find plugins/ -name '*.dll' -exec cp '{}' ${INSTALL_DIR}/plugins/ ';'
 	for dll in ${INSTALL_DIR}/plugins/lib*.dll; do
@@ -88,26 +99,27 @@ staging)
 	if [ -d translations ]; then
 		"${CMAKE_COMMAND}" -E copy_directory translations ${INSTALL_DIR}/translations
 	fi
-	cp_dll libjpeg-62.dll ${INSTALL_DIR}
-	cp_dll libpng16-16.dll ${INSTALL_DIR}
-	cp ${DLLDIR}/libcrypto-3*.dll ${DLLDIR}/libssl-3*.dll ${INSTALL_DIR}
-	cp_dll libqca-qt6.dll ${INSTALL_DIR}
-	cp_dll libsasl2-3.dll ${INSTALL_DIR}
-	cp_dll libldap.dll ${INSTALL_DIR}
-	cp_dll liblber.dll ${INSTALL_DIR}
+	cp_dll ${INSTALL_DIR} libjpeg-62.dll libjpeg-8.dll
+	cp_dll ${INSTALL_DIR} libpng16-16.dll
+	cp_dll ${INSTALL_DIR} 'libcrypto-3*.dll'
+	cp_dll ${INSTALL_DIR} 'libssl-3*.dll'
+	cp_dll ${INSTALL_DIR} libqca-qt6.dll
+	cp_dll ${INSTALL_DIR} libsasl2-3.dll
+	cp_dll ${INSTALL_DIR} libldap.dll 'libldap-2.5-0.dll' 'libldap-2.6-0.dll'
+	cp_dll ${INSTALL_DIR} liblber.dll 'liblber-2.5-0.dll' 'liblber-2.6-0.dll' 
 	# interception.dll only exists when linking the Interception SDK as a
 	# shared library - the vendored static library needs no runtime DLL
 	if [ -f "${DLLDIR}/interception.dll" ]; then
 		cp "${DLLDIR}/interception.dll" ${INSTALL_DIR}
 	fi
-	cp_dll liblzo2-2.dll ${INSTALL_DIR}
-	cp_dll libvncclient.dll ${INSTALL_DIR}
-	cp_dll libvncserver.dll ${INSTALL_DIR}
-	cp_dll zlib1.dll ${INSTALL_DIR}
-	cp_dll libwinpthread-1.dll ${INSTALL_DIR}
-	cp_dll libstdc++-6.dll ${INSTALL_DIR}
-	cp_dll libssp-0.dll ${INSTALL_DIR}
-	cp_dll ${DLL_GCC} ${INSTALL_DIR}
+	cp_dll ${INSTALL_DIR} liblzo2-2.dll
+	cp_dll ${INSTALL_DIR} libvncclient.dll
+	cp_dll ${INSTALL_DIR} libvncserver.dll
+	cp_dll ${INSTALL_DIR} zlib1.dll
+	cp_dll ${INSTALL_DIR} libwinpthread-1.dll
+	cp_dll ${INSTALL_DIR} libstdc++-6.dll
+	cp_dll ${INSTALL_DIR} libssp-0.dll
+	cp_dll ${INSTALL_DIR} ${DLL_GCC}
 	mkdir -p ${INSTALL_DIR}/crypto
 	QCA_CRYPTO=""
 	for dir in "${DLLDIR_LIB}/qca-qt6/crypto" "${DLLDIR}/qca-qt6/crypto" "${MINGW_PREFIX}/lib/qt6/plugins/crypto"; do
@@ -121,15 +133,15 @@ staging)
 		exit 1
 	fi
 	cp "${QCA_CRYPTO}" ${INSTALL_DIR}/crypto
-	cp_dll Qt6Core.dll ${INSTALL_DIR}
-	cp_dll Qt6Core5Compat.dll ${INSTALL_DIR}
-	cp_dll Qt6Gui.dll ${INSTALL_DIR}
-	cp_dll Qt6Widgets.dll ${INSTALL_DIR}
-	cp_dll Qt6Network.dll ${INSTALL_DIR}
-	cp_dll Qt6Concurrent.dll ${INSTALL_DIR}
+	cp_dll ${INSTALL_DIR} Qt6Core.dll
+	cp_dll ${INSTALL_DIR} Qt6Core5Compat.dll
+	cp_dll ${INSTALL_DIR} Qt6Gui.dll
+	cp_dll ${INSTALL_DIR} Qt6Widgets.dll
+	cp_dll ${INSTALL_DIR} Qt6Network.dll
+	cp_dll ${INSTALL_DIR} Qt6Concurrent.dll
 	# only present/needed when the corresponding Qt module is in the prefix
-	cp_dll_optional Qt6HttpServer.dll ${INSTALL_DIR}
-	cp_dll_optional Qt6WebSockets.dll ${INSTALL_DIR}
+	cp_dll_optional ${INSTALL_DIR} Qt6HttpServer.dll
+	cp_dll_optional ${INSTALL_DIR} Qt6WebSockets.dll
 	QT_PLUGINS=$(qt_plugins_dir)
 	mkdir -p ${INSTALL_DIR}/imageformats
 	cp "${QT_PLUGINS}/imageformats/qjpeg.dll" ${INSTALL_DIR}/imageformats
