@@ -3,6 +3,13 @@ include(BuildVeyonPlugin)
 set(QT_NO_PRIVATE_MODULE_WARNING ON)
 find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
 
+# Interception API library, vendored under 3rdparty/interception/library
+# (the MSYS2/GitHub-hosted Windows toolchain has no system-wide Interception SDK)
+add_library(interception STATIC ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/interception/library/interception.c)
+target_include_directories(interception PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../../3rdparty/interception/library)
+target_compile_definitions(interception PUBLIC INTERCEPTION_STATIC)
+target_compile_options(interception PRIVATE -Wno-error)
+
 build_veyon_plugin(windows-platform
 	NAME WindowsPlatform
 	SOURCES
@@ -67,7 +74,7 @@ target_include_directories(windows-platform PRIVATE
 	${ultravnc_DIR}
 	)
 
-target_link_libraries(windows-platform PRIVATE -lws2_32 -lwtsapi32 -lnetapi32 -luserenv -limm32 -lntdll -linterception -liphlpapi -lsetupapi -lsecur32)
+target_link_libraries(windows-platform PRIVATE -lws2_32 -lwtsapi32 -lnetapi32 -luserenv -limm32 -lntdll interception -liphlpapi -lsetupapi -lsecur32)
 target_link_libraries(windows-platform PRIVATE Qt6::GuiPrivate)
 target_compile_definitions(windows-platform PRIVATE ULTRAVNC_VEYON_SUPPORT)
 target_compile_options(windows-platform PRIVATE "-Wno-unknown-pragmas;-flarge-source-files;-Wno-misleading-indentation")
