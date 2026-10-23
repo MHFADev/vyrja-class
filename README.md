@@ -1,163 +1,87 @@
-# Veyon - Virtual Eye On Networks
+<p align="center">
+  <img src="core/resources/vyrja-logo-wide.png" alt="Vyrja Studio" width="420">
+</p>
 
-[![.github/workflows/build.yml](https://github.com/veyon/veyon/actions/workflows/build.yml/badge.svg?branch=4.5)](https://github.com/veyon/veyon/actions/workflows/build.yml)
-[![Latest stable release](https://img.shields.io/github/release/veyon/veyon.svg?maxAge=3600)](https://github.com/veyon/veyon/releases)
-[![Overall downloads on Github](https://img.shields.io/github/downloads/veyon/veyon/total.svg?maxAge=3600)](https://github.com/veyon/veyon/releases)
-[![Documentation Status](https://readthedocs.org/projects/veyon/badge/?version=latest)](https://docs.veyon.io/)
-[![Localise on Transifex](https://img.shields.io/badge/localise-on_transifex-green.svg)](https://app.transifex.com/veyon-solutions/veyon/)
-[![license](https://img.shields.io/badge/license-GPLv2-green.svg)](LICENSE)
+<h1 align="center">Vyrja Classroom</h1>
 
+<p align="center">
+  <b>Software manajemen kelas open source dari Vyrja Studio</b><br>
+  Pantau, bimbing, dan ajar kelas di lab komputer — semua dari meja guru.
+</p>
 
-## What is Veyon?
+<p align="center">
+  <a href="https://github.com/MHFADev/vyrja-class/actions/workflows/vyrja-build.yml"><img src="https://github.com/MHFADev/vyrja-class/actions/workflows/vyrja-build.yml/badge.svg" alt="Build status"></a>
+  <a href="https://github.com/MHFADev/vyrja-class/releases"><img src="https://img.shields.io/github/v/release/MHFADev/vyrja-class" alt="Rilisan terbaru"></a>
+  <a href="COPYING"><img src="https://img.shields.io/badge/license-GPLv2-green.svg" alt="Lisensi GPLv2"></a>
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-blue.svg" alt="Windows | Linux">
+</p>
 
-Veyon is a free and open source software for monitoring and controlling
-computers across multiple platforms. Veyon supports you in teaching in digital
-learning environments, performing virtual trainings or giving remote support.
+---
 
-The following features are available in Veyon:
+## Apa itu Vyrja Classroom?
 
-  * Overview: monitor all computers in one or multiple locations or classrooms
-  * Remote access: view or control computers to watch and support users
-  * Demo: broadcast the teacher's screen in realtime (fullscreen/window)
-  * Screen lock: draw attention to what matters right now
-  * Communication: send text messages to students
-  * Start and end lessons: log in and log out users all at once
-  * Screenshots: record learning progress and document infringements
-  * Programs & websites: launch programs and open website URLs remotely
-  * Teaching material: distribute and open documents, images and videos easily
-  * Administration: power on/off and reboot computers remotely
+Vyrja Classroom adalah aplikasi gratis dan open source untuk memantau serta
+mengendalikan komputer-komputer di kelas atau lab, lintas platform. Guru bisa
+mengawasi aktivitas siswa, membantu dari jarak jauh, dan menjaga kelas tetap
+fokus — tanpa harus berkeliling ruangan.
 
+> **Vyrja Classroom bukan Veyon.** Aplikasi ini adalah *fork* yang di-*rebrand*
+> dan ditingkatkan dari [Veyon](https://veyon.io) 4.11.4 oleh **Vyrja Studio**.
+> Kode dasarnya berasal dari Veyon, tetapi nama, tampilan, dan pengalamannya
+> adalah khas Vyrja. Daftar lengkap perbedaannya ada di [VYRJA.md](VYRJA.md).
 
-## License
+## Fitur utama
 
-Copyright (c) 2004-2026 Tobias Junghans / Veyon Solutions.
+* **Pantau kelas** — lihat semua layar komputer siswa dalam satu tampilan
+* **Remote access** — lihat atau kendalikan komputer siswa untuk membantu mereka
+* **Mode demo** — siarkan layar guru ke semua siswa secara realtime (fullscreen atau jendela)
+* **Kunci layar** — bekukan layar siswa saat guru menjelaskan, agar perhatian terpusat
+* **Pesan teks** — kirim pengumuman atau instruksi ke siswa
+* **Login & logout massal** — mulai dan akhiri sesi kelas untuk semua siswa sekaligus
+* **Screenshot** — dokumentasikan progres belajar siswa
+* **Jalankan program & situs** — buka aplikasi dan URL di komputer siswa dari jarak jauh
+* **Distribusi materi** — kirim dan buka dokumen, gambar, dan video di komputer siswa
+* **Administrasi daya** — nyalakan, matikan, dan restart komputer siswa dari jarak jauh
 
-See the file COPYING for the GNU GENERAL PUBLIC LICENSE.
+## Yang baru khas Vyrja
 
+* **Quick Setup wizard** — pasang kelas dalam hitungan menit. Guru membuat kunci
+  kelas, menyimpan file kunci untuk siswa, lalu memindai jaringan untuk
+  menemukan PC siswa secara otomatis. Siswa cukup memilih file kunci guru.
+  Tanpa konfigurasi kunci/autentikasi manual.
+* **Command palette (Ctrl+K)** — ketik "kunci", "lock", "message"… dan jalankan
+  aksi apa pun langsung dari keyboard.
+* **Quick class** — menu fokus kelas (kunci semua), pengumuman, timer istirahat
+  dengan buka-kunci otomatis, timer kerja dengan peringatan 5 menit, dan ekspor
+  absensi ke CSV.
+* **Status live** — penghitung komputer online / offline / bermasalah di header
+  dan jumlah komputer terpilih di status bar, diperbarui setiap detik.
+* **Bahasa Indonesia** — antarmuka Master dan Setup diterjemahkan penuh.
+* **Tema Vyrja** — identitas visual navy `#26236B`, oranye `#FF6B4A`, dan krem
+  `#FAF9FD`, dengan varian terang dan gelap.
 
-## Installation and configuration
+## Unduh & pasang
 
-Please refer to the official Veyon Administrator Manual at https://docs.veyon.io/en/latest/admin/index.html
-for information on the installation and configuration of Veyon.
+Installer siap pakai tersedia di halaman
+[**Releases**](https://github.com/MHFADev/vyrja-class/releases):
 
+* **Windows** — installer `.exe` (64-bit)
+* **Linux** — paket `.deb` untuk Ubuntu 24.04 dan Debian 12
 
-## Usage
+Mau build sendiri dari source? Lihat [BUILDING.md](BUILDING.md).
 
-Please refer to the official Veyon User Manual at https://docs.veyon.io/en/latest/user/index.html
-for information on how to use Veyon.
+## Berdasarkan Veyon
 
+Vyrja Classroom dibangun di atas [Veyon](https://veyon.io) 4.11.4, software
+manajemen kelas open source oleh Tobias Junghans / Veyon Solutions. Seluruh
+pemberitahuan hak cipta upstream dipertahankan, dan dialog About di aplikasi
+tetap mencantumkan kredit untuk Veyon.
 
-## Veyon on Linux
+## Lisensi
 
-### Downloading sources
+Vyrja Classroom dilisensikan di bawah **GPL-2.0-or-later**, sama seperti
+upstream — lihat berkas [COPYING](COPYING) untuk teks lengkap GNU General
+Public License.
 
-First grab the latest sources by cloning the Git repository and fetching all submodules:
-
-	git clone --recursive https://github.com/veyon/veyon.git && cd veyon
-
-
-### Installing dependencies
-
-Requirements for Debian-based distributions:
-
-- Build tools: g++ libc6-dev make cmake dpkg-dev
-- Qt5: qtbase5-dev qtbase5-private-dev qtbase5-dev-tools qttools5-dev qttools5-dev-tools
-- X11: xorg-dev libxtst-dev libfakekey-dev
-- libjpeg: libjpeg-dev provided by libjpeg-turbo8-dev or libjpeg62-turbo-dev
-- zlib: zlib1g-dev
-- OpenSSL: libssl-dev
-- PAM: libpam0g-dev
-- procps: libprocps-dev
-- LZO: liblzo2-dev
-- QCA: libqca-qt5-2-dev
-- LDAP: libldap2-dev
-- SASL: libsasl2-dev
-
-As root you can run
-
-	apt install g++ libc6-dev make cmake qtbase5-dev qtbase5-private-dev \
-	            qtbase5-dev-tools qttools5-dev qttools5-dev-tools \
-	            xorg-dev libxtst-dev libfakekey-dev libjpeg-dev zlib1g-dev libssl-dev libpam0g-dev \
-	            libprocps-dev liblzo2-dev libqca-qt5-2-dev libldap2-dev \
-	            libsasl2-dev
-
-
-
-Requirements for RedHat-based distributions:
-
-- Build tools: gcc-c++ make cmake rpm-build
-- Qt5: qt5-devel qt5-qtbase-private-devel
-- X11: libXtst-devel libXrandr-devel libXinerama-devel libXcursor-devel libXrandr-devel libXdamage-devel libXcomposite-devel libXfixes-devel libfakekey-devel
-- libjpeg: libjpeg-turbo-devel
-- zlib: zlib-devel
-- OpenSSL: openssl-devel
-- PAM: pam-devel
-- procps: procps-devel
-- LZO: lzo-devel
-- QCA: qca-devel qca-qt5-devel
-- LDAP: openldap-devel
-- SASL: cyrus-sasl-devel
-
-As root you can run
-
-	dnf install gcc-c++ make cmake rpm-build qt5-devel libXtst-devel libXrandr-devel libXinerama-devel libXcursor-devel \
-             libXrandr-devel libXdamage-devel libXcomposite-devel libXfixes-devel libjpeg-turbo-devel zlib-devel \
-             openssl-devel pam-devel procps-devel lzo-devel qca-devel qca-qt5-devel openldap-devel cyrus-sasl-devel
-
-
-### Configuring and building sources
-
-Run the following commands:
-
-	mkdir build
-	cd build
-	cmake ..
-	make -j4
-
-NOTE: If you want to build a .deb or .rpm package for this software, instead of the provided cmake command, you should use:
-
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-
-to install package files in /usr instead of /usr/local.
-
-If some requirements are not fullfilled, CMake will inform you about it and
-you will have to install the missing software before continuing.
-
-You can now generate a package (.deb or .rpm depending what system you are in).
-
-For generating a package you can run
-
-	fakeroot make package
-
-Then you'll get something like veyon_x.y.z_arch.deb or veyon-x.y.z.arch.rpm
-
-Alternatively you can install the built binaries directly (not recommended for
-production systems) by running the following command as root:
-
-	make install
-
-### Arch linux
-
-A PKGBUILD can be found in the [AUR](https://aur.archlinux.org/packages/veyon/).
-
-### PPA
-
-This PPA contains official Veyon packages for Ubuntu suitable for use both on desktop computers and ARM boards (e.g. Raspberry Pi). Even though only packages for LTS releases are available they should work for subsequent non-LTS releases as well.
-
-	sudo add-apt-repository ppa:veyon/stable
-	sudo apt-get update
-
-## Join development
-
-If you are interested in Veyon, its programming, artwork, testing or something like that, you're welcome to participate in the development of Veyon!
-
-Before starting the implementation of a new feature, please always open an issue at https://github.com/veyon/veyon/issues to start a discussion about your intended implementation. There may be different ideas, improvements, hints or maybe an already ongoing work on this feature.
-
-## Join translation team
-
-Veyon and its documentation are translated at the Transifex platform. Please go to https://app.transifex.com/veyon-solutions/veyon and join the corresponding translation team. Please DO NOT submit pull requests for modified translation files since this would require manual Transifex synchronizations on our side.
-
-## More information
-
-* https://veyon.io/
-* https://docs.veyon.io/
+Copyright (c) 2004-2026 Tobias Junghans / Veyon Solutions (kode upstream).
+Modifikasi, branding, dan fitur tambahan © Vyrja Studio.
