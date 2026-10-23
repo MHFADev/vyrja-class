@@ -61,7 +61,7 @@ cp_dll() {
 # only when it exists in the prefix (for libraries that only some build
 # configurations link against).
 cp_dll_optional() {
-	cp_dll "$@" || true
+	cp_dll "$@" 2>/dev/null || true
 }
 
 # qt_plugins_dir - locate the Qt6 plugins directory of the prefix by
@@ -150,7 +150,21 @@ staging)
 	cp "${QT_PLUGINS}"/styles/*.dll ${INSTALL_DIR}/styles
 	mkdir -p ${INSTALL_DIR}/tls
 	cp "${QT_PLUGINS}/tls/qopensslbackend.dll" ${INSTALL_DIR}/tls
-	"${MINGW_TOOL_PREFIX}strip" ${INSTALL_DIR}/*.dll ${INSTALL_DIR}/*.exe ${INSTALL_DIR}/plugins/*.dll ${INSTALL_DIR}/platforms/*.dll ${INSTALL_DIR}/styles/*.dll ${INSTALL_DIR}/crypto/*.dll
+	# the target-prefixed strip (x86_64-w64-mingw32-strip) is not shipped
+	# by every toolchain - MSYS2's native UCRT64 binutils only provides the
+	# plain "strip" - so resolve whatever the active toolchain offers
+	STRIP=""
+	for cand in "${MINGW_TOOL_PREFIX}strip" strip "${MINGW_PREFIX}/bin/${MINGW_TOOL_PREFIX}strip" "${MINGW_PREFIX}/bin/strip"; do
+		if command -v "${cand}" >/dev/null 2>&1; then
+			STRIP="${cand}"
+			break
+		fi
+	done
+	if [ -z "${STRIP}" ]; then
+		echo "error: no strip executable found for the active toolchain" >&2
+		exit 1
+	fi
+	"${STRIP}" ${INSTALL_DIR}/*.dll ${INSTALL_DIR}/*.exe ${INSTALL_DIR}/plugins/*.dll ${INSTALL_DIR}/platforms/*.dll ${INSTALL_DIR}/styles/*.dll ${INSTALL_DIR}/crypto/*.dll
 	cp "${CMAKE_SOURCE_DIR}/COPYING" ${INSTALL_DIR}
 	cp "${CMAKE_SOURCE_DIR}/COPYING" ${INSTALL_DIR}/LICENSE.TXT
 	cp "${CMAKE_SOURCE_DIR}/README.md" ${INSTALL_DIR}/README.TXT
