@@ -3,7 +3,11 @@ set(WINDOWS_INSTALL_FILES "veyon-${VEYON_WINDOWS_ARCH}-${VERSION_MAJOR}.${VERSIO
 set(DLLDIR "${MINGW_PREFIX}/bin")
 set(DLLDIR_LIB "${MINGW_PREFIX}/lib")
 string(REGEX MATCH "^[^.]+" GCC_VERSION_MAJOR ${CMAKE_CXX_COMPILER_VERSION})
-set(DLLDIR_GCC "/usr/lib/gcc/${MINGW_TARGET}/${GCC_VERSION_MAJOR}-posix")
+if(EXISTS "${MINGW_PREFIX}/lib/gcc/${MINGW_TARGET}")
+	set(DLLDIR_GCC "${MINGW_PREFIX}/lib/gcc/${MINGW_TARGET}/${GCC_VERSION_MAJOR}")
+else()
+	set(DLLDIR_GCC "/usr/lib/gcc/${MINGW_TARGET}/${GCC_VERSION_MAJOR}-posix")
+endif()
 if(VEYON_BUILD_WIN64)
 	set(DLL_GCC "libgcc_s_seh-1.dll")
 	set(DLL_DDENGINE "ddengine64.dll")
@@ -84,4 +88,3 @@ add_custom_target(prepare-dev-nsi
 add_custom_target(dev-nsi
 	DEPENDS prepare-dev-nsi create-windows-installer
 )
-
