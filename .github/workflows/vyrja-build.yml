@@ -11,6 +11,7 @@ permissions:
 
 env:
   PROJECT_NAME: vyrja-classroom
+  CMAKE_FLAGS: '-DSKIP_PLUGINS=ldap;webapi'
 
 jobs:
   windows:
@@ -38,23 +39,21 @@ jobs:
             mingw-w64-x86_64-qt6-5compat
             mingw-w64-x86_64-qt6-tools
             mingw-w64-x86_64-qt6-translations
-            mingw-w64-x86_64-qca-qt6
+            mingw-w64-x86_64-qca
             mingw-w64-x86_64-openldap
             mingw-w64-x86_64-cyrus-sasl
             mingw-w64-x86_64-openssl
             mingw-w64-x86_64-libjpeg-turbo
             mingw-w64-x86_64-libpng
-            mingw-w64-x86_64-lzo
+            mingw-w64-x86_64-lzo2
             mingw-w64-x86_64-libvncserver
-            nsis
+            mingw-w64-x86_64-nsis
             dos2unix
       - name: Mark workspace as safe for Git
         shell: msys2 {0}
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build Windows installer
         shell: msys2 {0}
-        env:
-          CMAKE_FLAGS: -DSKIP_PLUGINS=ldap
         run: .ci/windows/build.sh "${{ matrix.arch }}" create-windows-installer
       - name: Collect Windows installer
         shell: msys2 {0}
@@ -84,8 +83,6 @@ jobs:
       - name: Mark workspace as safe for Git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build Debian package
-        env:
-          CMAKE_FLAGS: -DSKIP_PLUGINS=ldap
         run: .ci/linux.${{ matrix.dist }}/script.sh "$GITHUB_WORKSPACE" /tmp
       - name: Collect Debian package
         shell: bash
