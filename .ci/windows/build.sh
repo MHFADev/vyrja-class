@@ -11,7 +11,11 @@ rm -rf $BUILDDIR
 mkdir $BUILDDIR
 cd $BUILDDIR
 
-PREFIX=/usr/$1-w64-mingw32
+if [ -n "${MINGW_PREFIX:-}" ] && [ -x "${MINGW_PREFIX}/bin/qt-cmake" ]; then
+	PREFIX="${MINGW_PREFIX}"
+else
+	PREFIX="/usr/$1-w64-mingw32"
+fi
 $PREFIX/bin/qt-cmake $BASEDIR \
 	-G Ninja \
 	-DQT_TRANSLATIONS_DIR=$PREFIX/translations \
@@ -24,4 +28,3 @@ else
 fi
 
 mv vyrja-classroom-*setup.exe veyon-*win* $BASEDIR 2>/dev/null || true
-
