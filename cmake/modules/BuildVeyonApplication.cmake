@@ -25,6 +25,26 @@ function(build_veyon_application TARGET)
 		target_precompile_headers(${TARGET} REUSE_FROM veyon-application-pch)
 	endif()
 	if (VEYON_BUILD_WINDOWS)
+		# Ship the binaries with Vyrja file names on Windows instead of
+		# the upstream Veyon ones. Only the output file names change:
+		# CMake target names, the Windows service ID and all
+		# configuration/data paths intentionally stay untouched, so
+		# existing Veyon data and settings remain in place.
+		if(${TARGET} STREQUAL "veyon-master")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-classroom")
+		elseif(${TARGET} STREQUAL "veyon-configurator")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-setup")
+		elseif(${TARGET} STREQUAL "veyon-service")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-service")
+		elseif(${TARGET} STREQUAL "veyon-server")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-server")
+		elseif(${TARGET} STREQUAL "veyon-worker")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-worker")
+		elseif(${TARGET} STREQUAL "veyon-cli")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-cli")
+		elseif(${TARGET} STREQUAL "veyon-wcli")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-wcli")
+		endif()
 		add_windows_resources(${TARGET} ${ARGN})
 	endif()
 endfunction()
