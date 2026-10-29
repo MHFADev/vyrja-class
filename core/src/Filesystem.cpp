@@ -177,7 +177,11 @@ QString Filesystem::screenshotDirectoryPath() const
 QString Filesystem::serverFilePath() const
 {
 	return QDir::toNativeSeparators( QCoreApplication::applicationDirPath() + QDir::separator() +
+#ifdef Q_OS_WIN
+									 QStringLiteral("vyrja-server" ) + VeyonCore::executableSuffix() );
+#else
 									 QStringLiteral("veyon-server" ) + VeyonCore::executableSuffix() );
+#endif
 }
 
 
@@ -185,5 +189,9 @@ QString Filesystem::serverFilePath() const
 QString Filesystem::workerFilePath() const
 {
 	return QDir::toNativeSeparators( QCoreApplication::applicationDirPath() + QDir::separator() +
+#ifdef Q_OS_WIN
+									 QStringLiteral("vyrja-worker" ) + VeyonCore::executableSuffix() );
+#else
 									 QStringLiteral("veyon-worker" ) + VeyonCore::executableSuffix() );
+#endif
 }
