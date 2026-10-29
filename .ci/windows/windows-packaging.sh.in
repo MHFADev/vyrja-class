@@ -243,6 +243,17 @@ installer)
 		${INSTALL_DIR}/veyon.nsi
 	( cd ${INSTALL_DIR} && makensis veyon.nsi )
 	mv ${INSTALL_DIR}/vyrja-classroom-*setup.exe .
+
+	# RMM edition builds (release tags containing "-rmm", built with
+	# WITH_RMM=ON) get a distinct installer file name so both editions
+	# can be published side by side.
+	case "${GITHUB_REF_NAME}" in
+		*-rmm*)
+			for f in vyrja-classroom-*setup.exe; do
+				mv "${f}" "vyrja-classroom-rmm-${f#vyrja-classroom-}"
+			done
+			;;
+	esac
 	rm -rf ${INSTALL_DIR}
 	;;
 devnsi)
