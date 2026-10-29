@@ -6,7 +6,7 @@
 !define DESCRIPTION "Vyrja Classroom Installer (based on Veyon)"
 !define LICENSE_TXT "COPYING"
 !define INSTALLER_NAME "vyrja-classroom-${VERSION}-@VEYON_WINDOWS_ARCH@-setup.exe"
-!define MAIN_APP_EXE "vyrja-classroom.exe"
+!define MAIN_APP_EXE "vyrja-master.exe"
 !define INSTALL_TYPE "SetShellVarContext all"
 !define REG_ROOT "HKLM"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
@@ -167,7 +167,7 @@ SetOutPath "$INSTDIR"
 # core components
 File "vyrja-server.exe"
 File "vyrja-service.exe"
-File "vyrja-setup.exe"
+File "vyrja-configurator.exe"
 File "vyrja-cli.exe"
 File "vyrja-wcli.exe"
 File "vyrja-worker.exe"
@@ -215,7 +215,7 @@ SectionEnd
 Section "Vyrja Classroom" SEC_MASTER
 ${INSTALL_TYPE}
 SetOutPath "$INSTDIR"
-File "vyrja-classroom.exe"
+File "vyrja-master.exe"
 
 ${GetParameters} $R0
 ${GetOptions} $R0 "/NoStartMenuFolder" $R1
@@ -233,7 +233,7 @@ File "interception/*"
 SectionEnd
 
 Function RunConfigurator
-	Exec '"$INSTDIR\vyrja-setup.exe"'
+	Exec '"$INSTDIR\vyrja-configurator.exe"'
 FunctionEnd
 
 
@@ -268,7 +268,7 @@ ${GetParameters} $R0
 ${GetOptions} $R0 "/NoStartMenuFolder" $R1
 ${If} ${Errors}
 CreateDirectory "$SMPROGRAMS\Vyrja Classroom"
-CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Vyrja Setup.lnk" "$INSTDIR\vyrja-setup.exe"
+CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Vyrja Setup.lnk" "$INSTDIR\vyrja-configurator.exe"
 CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Uninstall Vyrja Classroom.lnk" "$INSTDIR\uninstall.exe"
 WriteIniStr "$INSTDIR\Veyon website.url" "InternetShortcut" "URL" "${WEB_SITE}"
 CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Veyon Website (upstream).lnk" "$INSTDIR\Veyon website.url"
