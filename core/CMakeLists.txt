@@ -58,6 +58,8 @@ if(VEYON_BUILD_WINDOWS)
 	# add Windows Socket library required by libvncclient
 	target_link_libraries(veyon-core PRIVATE -lws2_32)
 	set_target_properties(veyon-core PROPERTIES PREFIX "")
+	# match the application binaries: Vyrja file name on Windows
+	set_target_properties(veyon-core PROPERTIES OUTPUT_NAME "vyrja-core")
 	add_windows_resources(veyon-core
 		NAME VeyonCore
 		DESCRIPTION "Veyon Core Library")
