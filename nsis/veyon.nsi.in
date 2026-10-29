@@ -6,7 +6,7 @@
 !define DESCRIPTION "Vyrja Classroom Installer (based on Veyon)"
 !define LICENSE_TXT "COPYING"
 !define INSTALLER_NAME "vyrja-classroom-${VERSION}-@VEYON_WINDOWS_ARCH@-setup.exe"
-!define MAIN_APP_EXE "veyon-master.exe"
+!define MAIN_APP_EXE "vyrja-classroom.exe"
 !define INSTALL_TYPE "SetShellVarContext all"
 !define REG_ROOT "HKLM"
 !define REG_APP_PATH "Software\Microsoft\Windows\CurrentVersion\App Paths\${MAIN_APP_EXE}"
@@ -153,7 +153,7 @@ Section "Vyrja Service" SEC_SERVICE
 SectionIn RO
 ${INSTALL_TYPE}
 ClearErrors
-ExecWait '"$INSTDIR\veyon-wcli.exe" service unregister'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" service unregister'
 ${If} $0 != 0
   ExecWait '"$INSTDIR\veyon-ctl.exe" service unregister'
 ${EndIf}
@@ -165,12 +165,12 @@ RmDir /r "$INSTDIR\translations"
 SetOverwrite on
 SetOutPath "$INSTDIR"
 # core components
-File "veyon-server.exe"
-File "veyon-service.exe"
-File "veyon-configurator.exe"
-File "veyon-cli.exe"
-File "veyon-wcli.exe"
-File "veyon-worker.exe"
+File "vyrja-server.exe"
+File "vyrja-service.exe"
+File "vyrja-setup.exe"
+File "vyrja-cli.exe"
+File "vyrja-wcli.exe"
+File "vyrja-worker.exe"
 File "*.dll"
 File "LICENSE.TXT"
 File "README.TXT"
@@ -195,27 +195,27 @@ File "styles/*.dll"
 SetOutPath "$INSTDIR\tls"
 File "tls/qopensslbackend.dll"
 # configuration
-ExecWait '"$INSTDIR\veyon-wcli.exe" service register'
-ExecWait '"$INSTDIR\veyon-wcli.exe" config set Network/FirewallExceptionEnabled 1'
-ExecWait '"$INSTDIR\veyon-wcli.exe" config set Windows/SoftwareSASEnabled 1'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" service register'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" config set Network/FirewallExceptionEnabled 1'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" config set Windows/SoftwareSASEnabled 1'
 # disable forced guest logon as otherwise logon authentication fails
 WriteRegDWORD ${REG_ROOT} "SYSTEM\CurrentControlSet\Control\Lsa"  "ForceGuest" "0"
 ${GetParameters} $R0
 ${GetOptions} $R0 "/ApplyConfig=" $R1
 ${If} $R1 != ""
   ClearErrors
-  ExecWait '"$INSTDIR\veyon-wcli.exe" config import "$R1"' $0
+  ExecWait '"$INSTDIR\vyrja-wcli.exe" config import "$R1"' $0
   ${If} $0 != 0
 	   MessageBox MB_OK|MB_ICONSTOP "Could not apply specified configuration file!"
   ${EndIf}
 ${EndIf}
-ExecWait '"$INSTDIR\veyon-wcli.exe" service start'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" service start'
 SectionEnd
 
 Section "Vyrja Classroom" SEC_MASTER
 ${INSTALL_TYPE}
 SetOutPath "$INSTDIR"
-File "veyon-master.exe"
+File "vyrja-classroom.exe"
 
 ${GetParameters} $R0
 ${GetOptions} $R0 "/NoStartMenuFolder" $R1
@@ -233,7 +233,7 @@ File "interception/*"
 SectionEnd
 
 Function RunConfigurator
-	Exec '"$INSTDIR\veyon-configurator.exe"'
+	Exec '"$INSTDIR\vyrja-setup.exe"'
 FunctionEnd
 
 
@@ -268,7 +268,7 @@ ${GetParameters} $R0
 ${GetOptions} $R0 "/NoStartMenuFolder" $R1
 ${If} ${Errors}
 CreateDirectory "$SMPROGRAMS\Vyrja Classroom"
-CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Vyrja Setup.lnk" "$INSTDIR\veyon-configurator.exe"
+CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Vyrja Setup.lnk" "$INSTDIR\vyrja-setup.exe"
 CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Uninstall Vyrja Classroom.lnk" "$INSTDIR\uninstall.exe"
 WriteIniStr "$INSTDIR\Veyon website.url" "InternetShortcut" "URL" "${WEB_SITE}"
 CreateShortCut "$SMPROGRAMS\Vyrja Classroom\Veyon Website (upstream).lnk" "$INSTDIR\Veyon website.url"
@@ -288,9 +288,9 @@ SectionEnd
 Section Uninstall
 ${INSTALL_TYPE}
 
-ExecWait '"$INSTDIR\veyon-wcli.exe" config set Service/SoftwareSASEnabled 0'
-ExecWait '"$INSTDIR\veyon-wcli.exe" config set Network/FirewallExceptionEnabled 0'
-ExecWait '"$INSTDIR\veyon-wcli.exe" service unregister'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" config set Service/SoftwareSASEnabled 0'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" config set Network/FirewallExceptionEnabled 0'
+ExecWait '"$INSTDIR\vyrja-wcli.exe" service unregister'
 ExecWait '"$INSTDIR\interception\install-interception.exe" /uninstall'
 # make sure the service is stopped and all file handles are released
 Sleep 2000
@@ -298,7 +298,7 @@ Sleep 2000
 ${GetParameters} $R0
 ${GetOptions} $R0 "/ClearConfig" $R1
 ${IfNot} ${Errors}
-	ExecWait '"$INSTDIR\veyon-wcli.exe" config clear'
+	ExecWait '"$INSTDIR\vyrja-wcli.exe" config clear'
 ${EndIf}
 
 Delete "$INSTDIR\*.exe"
@@ -336,10 +336,10 @@ FunctionEnd
 
 ######################################################################
 
-LangString DESC_SEC_SERVICE ${LANG_ENGLISH} "Veyon service and common files required on all computers"
-LangString DESC_SEC_SERVICE ${LANG_GERMAN} "Veyon-Dienst und gemeinsame Dateien, die auf allen Computern benötigt werden"
-LangString DESC_SEC_MASTER ${LANG_ENGLISH} "Master application for monitoring and controlling Veyon client computers"
-LangString DESC_SEC_MASTER ${LANG_GERMAN} "Master-Applikation zum Beobachten und Steuern von Veyon-Client-Computern"
+LangString DESC_SEC_SERVICE ${LANG_ENGLISH} "Vyrja Classroom service and common files required on all computers"
+LangString DESC_SEC_SERVICE ${LANG_GERMAN} "Vyrja-Classroom-Dienst und gemeinsame Dateien, die auf allen Computern benötigt werden"
+LangString DESC_SEC_MASTER ${LANG_ENGLISH} "Master application for monitoring and controlling Vyrja Classroom client computers"
+LangString DESC_SEC_MASTER ${LANG_GERMAN} "Master-Applikation zum Beobachten und Steuern von Vyrja-Classroom-Client-Computern"
 LangString DESC_SEC_INTERCEPTION ${LANG_ENGLISH} "Special input device driver required for intercepting keyboard shortcuts such as Ctrl+Alt+Del in screen lock mode"
 LangString DESC_SEC_INTERCEPTION ${LANG_GERMAN} "Spezieller Eingabegerätetreiber, der zum Abfangen von Tastenkombinationen wie Strg+Alt+Entf im Bildschirmsperr-Modus benötigt wird"
 
