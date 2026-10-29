@@ -601,7 +601,7 @@ public:
 		{
 			const auto master = QDir(QCoreApplication::applicationDirPath()).filePath(
 #ifdef Q_OS_WIN
-				QStringLiteral("vyrja-classroom.exe")
+				QStringLiteral("vyrja-master.exe")
 #else
 				QStringLiteral("veyon-master")
 #endif
