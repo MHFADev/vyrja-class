@@ -467,7 +467,7 @@ bool MainWindow::initAuthentication()
 		{
 			const auto configurator = QDir( QCoreApplication::applicationDirPath() ).filePath(
 #ifdef Q_OS_WIN
-				QStringLiteral( "veyon-configurator.exe" )
+				QStringLiteral( "vyrja-setup.exe" )
 #else
 				QStringLiteral( "veyon-configurator" )
 #endif
