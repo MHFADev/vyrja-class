@@ -177,6 +177,15 @@
 	OP( VeyonConfiguration, VeyonCore::config(), bool, legacyComputerFilterHidden, setLegacyComputerFilterHidden, "ComputerFilterHidden", "Master", false, Configuration::Property::Flag::Legacy )	\
 	OP( VeyonConfiguration, VeyonCore::config(), int, legacyPrimaryServicePort, setLegacyPrimaryServicePort, "PrimaryServicePort", "Network", 11100, Configuration::Property::Flag::Legacy )			\
 
+#define FOREACH_VEYON_RMM_CONFIG_PROPERTY(OP)			\
+	OP( VeyonConfiguration, VeyonCore::config(), bool, rmmEnabled, setRmmEnabled, "Enabled", "RMM", false, Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), bool, rmmTelemetryEnabled, setRmmTelemetryEnabled, "TelemetryEnabled", "RMM", false, Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), bool, rmmAdminActionsEnabled, setRmmAdminActionsEnabled, "AdminActionsEnabled", "RMM", false, Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), bool, rmmRequireLocalConsent, setRmmRequireLocalConsent, "RequireLocalConsent", "RMM", true, Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), int, rmmTelemetryIntervalSeconds, setRmmTelemetryIntervalSeconds, "TelemetryIntervalSeconds", "RMM", 60, Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), QString, rmmCloudEndpoint, setRmmCloudEndpoint, "CloudEndpoint", "RMM", QString(), Configuration::Property::Flag::Advanced )			\
+	OP( VeyonConfiguration, VeyonCore::config(), QString, rmmDeviceId, setRmmDeviceId, "DeviceID", "RMM", QString(), Configuration::Property::Flag::Hidden )
+
 #define FOREACH_VEYON_CONFIG_PROPERTY(OP)				\
 	FOREACH_VEYON_CORE_CONFIG_PROPERTIES(OP)			\
 	FOREACH_VEYON_VNC_CONNECTION_CONFIG_PROPERTIES(OP)	\
@@ -193,4 +202,5 @@
 	FOREACH_VEYON_AUTHENTICATION_CONFIG_PROPERTY(OP)	\
 	FOREACH_VEYON_KEY_AUTHENTICATION_CONFIG_PROPERTY(OP)	\
 	FOREACH_VEYON_ACCESS_CONTROL_CONFIG_PROPERTY(OP) \
+	FOREACH_VEYON_RMM_CONFIG_PROPERTY(OP)			\
 	FOREACH_VEYON_LEGACY_CONFIG_PROPERTY(OP)
