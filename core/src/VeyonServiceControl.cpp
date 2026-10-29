@@ -57,7 +57,11 @@ QString VeyonServiceControl::filePath()
 	return QDir::toNativeSeparators(
 				QCoreApplication::applicationDirPath() +
 				QDir::separator() +
+#ifdef Q_OS_WIN
+				QStringLiteral("vyrja-service") + VeyonCore::executableSuffix() );
+#else
 				QStringLiteral("veyon-service") + VeyonCore::executableSuffix() );
+#endif
 }
 
 
