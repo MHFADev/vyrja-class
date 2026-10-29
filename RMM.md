@@ -169,8 +169,15 @@ The control plane is **PocketBase** — a single self-hostable binary
 (MIT licence) with an embedded database, REST/realtime API, admin UI
 and built-in authentication. It replaces the earlier Vercel + Supabase
 design: no separate frontend hosting, no Postgres to operate, no
-vendor lock-in. One small VPS (or any always-on machine) runs the
-whole control plane.
+vendor lock-in, no cloud account required.
+
+**Local-first:** the default deployment runs on the **admin/teacher
+PC itself**, on the same LAN as the managed computers — see the
+beginner starter kit in `rmm-server/`. Agents point
+`RMM/CloudEndpoint` at the teacher PC (e.g. `http://192.168.1.10:8090`).
+Nothing leaves the school network, and everything works without
+internet access. The same PocketBase folder can later be copied to a
+VPS unchanged if internet-wide management is ever wanted.
 
 - The agent never holds privileged database credentials and never
   accepts commands from an unauthenticated poll. Flow:
