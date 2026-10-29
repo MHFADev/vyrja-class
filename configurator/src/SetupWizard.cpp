@@ -601,7 +601,7 @@ public:
 		{
 			const auto master = QDir(QCoreApplication::applicationDirPath()).filePath(
 #ifdef Q_OS_WIN
-				QStringLiteral("veyon-master.exe")
+				QStringLiteral("vyrja-classroom.exe")
 #else
 				QStringLiteral("veyon-master")
 #endif
@@ -839,7 +839,7 @@ bool SetupWizard::runCli(const QStringList& arguments, QString* output)
 {
 	const auto cli = QDir(QCoreApplication::applicationDirPath()).filePath(
 #ifdef Q_OS_WIN
-		QStringLiteral("veyon-cli.exe")
+		QStringLiteral("vyrja-cli.exe")
 #else
 		QStringLiteral("veyon-cli")
 #endif
@@ -852,7 +852,7 @@ bool SetupWizard::runCli(const QStringList& arguments, QString* output)
 	{
 		if (output)
 		{
-			*output = QCoreApplication::translate("SetupWizard", "veyon-cli not found");
+			*output = QCoreApplication::translate("SetupWizard", "vyrja-cli not found");
 		}
 		return false;
 	}
