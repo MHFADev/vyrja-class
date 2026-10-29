@@ -150,6 +150,36 @@ staging)
 	cp "${QT_PLUGINS}"/styles/*.dll ${INSTALL_DIR}/styles
 	mkdir -p ${INSTALL_DIR}/tls
 	cp "${QT_PLUGINS}/tls/qopensslbackend.dll" ${INSTALL_DIR}/tls
+	# The hand-maintained copy list above cannot track the transitive
+	# dependencies of the staged libraries (Qt and its dependency
+	# chain alone pull in zstd and brotli, among others) - on user
+	# machines those showed up as "libzstd.dll was not found",
+	# "libbrotlidec.dll was not found" and more. Walk the import
+	# tables of everything staged so far with objdump (from the
+	# same binutils package as strip below) and copy every still
+	# missing dependency from the MinGW prefix, repeating until
+	# the closure is complete. System DLLs are not in the prefix
+	# and are skipped by find_dll naturally.
+	seen=""
+	changed=1
+	while [ ${changed} -eq 1 ]; do
+		changed=0
+		for bin in ${INSTALL_DIR}/*.exe ${INSTALL_DIR}/*.dll ${INSTALL_DIR}/plugins/*.dll ${INSTALL_DIR}/platforms/*.dll ${INSTALL_DIR}/styles/*.dll ${INSTALL_DIR}/imageformats/*.dll ${INSTALL_DIR}/tls/*.dll ${INSTALL_DIR}/crypto/*.dll; do
+			[ -f "${bin}" ] || continue
+			for dep in $(objdump -p "${bin}" 2>/dev/null | sed -n 's/.*DLL Name: //p'); do
+				case " ${seen} " in
+					*" ${dep} "*) continue ;;
+				esac
+				seen="${seen} ${dep}"
+				if [ ! -f "${INSTALL_DIR}/${dep}" ]; then
+					if f=$(find_dll "${dep}"); then
+						cp "$f" ${INSTALL_DIR}
+						changed=1
+					fi
+				fi
+			done
+		done
+	done
 	# the target-prefixed strip (x86_64-w64-mingw32-strip) is not shipped
 	# by every toolchain - MSYS2's native UCRT64 binutils only provides the
 	# plain "strip" - so resolve whatever the active toolchain offers
