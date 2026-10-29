@@ -85,8 +85,8 @@ staging)
 	# (e.g. the vendored Interception library)
 	find "${CMAKE_SOURCE_DIR}/3rdparty/interception" -maxdepth 1 -type f -exec cp {} ${INSTALL_DIR}/interception/ ';'
 	cp "${CMAKE_SOURCE_DIR}/3rdparty/ddengine/${DLL_DDENGINE}" ${INSTALL_DIR}
-	cp core/veyon-core.dll ${INSTALL_DIR}
-	find . -mindepth 2 -name 'veyon-*.exe' -not -path "./${INSTALL_DIR}/*" -exec cp '{}' ${INSTALL_DIR}/ ';'
+	cp core/vyrja-core.dll ${INSTALL_DIR}
+	find . -mindepth 2 -name 'vyrja-*.exe' -not -path "./${INSTALL_DIR}/*" -exec cp '{}' ${INSTALL_DIR}/ ';'
 	mkdir -p ${INSTALL_DIR}/plugins
 	find plugins/ -name '*.dll' -exec cp '{}' ${INSTALL_DIR}/plugins/ ';'
 	for dll in ${INSTALL_DIR}/plugins/lib*.dll; do
