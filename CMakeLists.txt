@@ -19,6 +19,13 @@ option(WITH_BUNDLED_LIBVNC "Build with bundled LibVNCServer/Client" OFF)
 option(WITH_WEBAPI "Build WebAPI plugin" ON)
 option(WITH_RMM "Build the optional Vyrja RMM agent plugin (experimental)" OFF)
 
+# Release builds from tags containing "-rmm" (e.g. v4.11.4-rmm) are the
+# RMM edition and always include the RMM agent plugin. GitHub Actions
+# exposes the tag name as GITHUB_REF_NAME in the environment.
+if(DEFINED ENV{GITHUB_REF_NAME} AND "$ENV{GITHUB_REF_NAME}" MATCHES "-rmm")
+	set(WITH_RMM ON CACHE BOOL "Build the optional Vyrja RMM agent plugin (experimental)" FORCE)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	set(VEYON_DEBUG TRUE)
