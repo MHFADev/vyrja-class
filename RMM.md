@@ -13,6 +13,24 @@ service supervision is modified by this plan.
 
 ---
 
+## Editions (two release tracks)
+
+Vyrja Classroom ships in two editions built from the same source:
+
+- **Standard edition** — tags like `v4.11.4`. Built with the default
+  flags (`WITH_RMM=OFF`); the RMM plugin is not part of the installer.
+- **RMM edition** — tags like `v4.11.4-rmm`. The `-rmm` tag suffix
+  makes the build force `WITH_RMM=ON` (root CMakeLists detects the
+  tag via `GITHUB_REF_NAME`), the `rmmagent` plugin is included, and
+  the Windows installer file is named
+  `vyrja-classroom-rmm-<version>-win64-setup.exe`.
+
+Even in the RMM edition the runtime gates stay default-off
+(`RMM/Enabled=false` etc.); an operator enables them explicitly per
+machine, e.g. `vyrja-cli config set RMM/Enabled true`. Phase 3B widens
+the functional difference between the editions (bridge + telemetry +
+signed actions exist only in the RMM edition).
+
 ## Phase 1 — Current architecture (verified in source)
 
 ```
@@ -145,26 +163,36 @@ exclusively in the existing interactive, notified Veyon features.
 A visible tray indicator shows when RMM is enabled, and when an admin
 action executes.
 
-### Control plane: Supabase + Vercel
+### Control plane: PocketBase (self-hosted, open source)
 
-- The agent never holds Supabase service-role credentials and never
+The control plane is **PocketBase** — a single self-hostable binary
+(MIT licence) with an embedded database, REST/realtime API, admin UI
+and built-in authentication. It replaces the earlier Vercel + Supabase
+design: no separate frontend hosting, no Postgres to operate, no
+vendor lock-in. One small VPS (or any always-on machine) runs the
+whole control plane.
+
+- The agent never holds privileged database credentials and never
   accepts commands from an unauthenticated poll. Flow:
-  agent → HTTPS (TLS 1.2+, pinned certificate) → Vercel API
-  (authentication, authorisation, request signing, rate limiting) →
-  Supabase (Postgres + RLS) as the data store. Privileged Supabase
-  credentials exist only inside Vercel functions.
+  agent -> HTTPS (TLS 1.2+, pinned certificate) -> PocketBase API
+  (per-device authenticated account, collection API rules restrict
+  each device to its own records) -> signed action descriptors are
+  picked up from the device's command queue collection.
 - Per-device keypair enrolled out-of-band (Configurator / Quick Setup
-  wizard); the server keeps the public keys and a revocation list.
-- The LAN master↔client protocol stays fully independent: cloud
-  outage or compromise must not affect classroom control.
+  wizard); the server keeps the public keys and a revocation list,
+  checked on every request.
+- Backups are a single data directory copy; scaling limits of the
+  embedded database are acceptable for classroom / small-fleet sizes.
+- The LAN master<->client protocol stays fully independent: control
+  plane outage or compromise must not affect classroom control.
 
 ### Intel AMT / vPro — external gateway (Phase 3C)
 
 AMT (WS-MAN, ports 16992/16993) is integrated **server-side**, never
 inside the desktop agent: the agent is offline exactly when
 out-of-band management is needed, and AMT credentials must never be
-stored on endpoints. A standalone Node.js gateway near the
-Vercel/Supabase plane authenticates operators, keeps per-device AMT
+stored on endpoints. A standalone Node.js gateway next to the
+PocketBase control plane authenticates operators, keeps per-device AMT
 credentials in a secrets vault, issues power/boot/KVM-redirect
 commands, and writes every OOB action to the same audit trail. The
 agent's only AMT role is reporting provisioning capability as one
@@ -178,8 +206,8 @@ telemetry field.
 - **3B:** `RmmServiceBridge` thread + `VyrjaRmmBridge` pipe with DACL
   and caller-token validation; telemetry collector worker with bounded
   queue; signed allow-listed admin actions with audit log.
-- **3C:** Vercel API + Supabase schema/RLS; device enrolment; AMT
-  gateway service.
+- **3C:** PocketBase collections + API rules; device enrolment;
+  AMT gateway service.
 
 Open items to audit before 3B: `plugins/webapi` authentication model,
 DesktopServices run-program surface, and the FeatureWorkerManager
