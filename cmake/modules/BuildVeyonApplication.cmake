@@ -31,9 +31,9 @@ function(build_veyon_application TARGET)
 		# configuration/data paths intentionally stay untouched, so
 		# existing Veyon data and settings remain in place.
 		if(${TARGET} STREQUAL "veyon-master")
-			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-classroom")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-master")
 		elseif(${TARGET} STREQUAL "veyon-configurator")
-			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-setup")
+			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-configurator")
 		elseif(${TARGET} STREQUAL "veyon-service")
 			set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "vyrja-service")
 		elseif(${TARGET} STREQUAL "veyon-server")
